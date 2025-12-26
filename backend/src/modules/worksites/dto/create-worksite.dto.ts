@@ -21,6 +21,43 @@ export class CreateWorksiteDto {
   @IsOptional()
   status?: WorksiteStatus;
 
+  // Informations de localisation
+  @IsString()
+  @IsOptional()
+  siteId?: string;
+
+  @IsString()
+  @IsOptional()
+  sectorId?: string;
+
+  @IsString()
+  @IsOptional()
+  unitId?: string;
+
+  @IsString()
+  @IsOptional()
+  buildingId?: string;
+
+  @IsString()
+  @IsOptional()
+  floorId?: string;
+
+  @IsString()
+  @IsOptional()
+  equipmentId?: string;
+
+  @IsString()
+  @IsOptional()
+  worksiteSector?: string;
+
+  @IsString()
+  @IsOptional()
+  gpsLocation?: string; // JSON {latitude, longitude}
+
+  @IsString()
+  @IsOptional()
+  clientContact?: string; // JSON Contact {name, phone, email}
+
   @IsNumber()
   @IsOptional()
   quoteAmount?: number;

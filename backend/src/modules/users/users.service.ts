@@ -159,10 +159,89 @@ export class UsersService {
     });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(id);
-    Object.assign(user, updateUserDto);
-    return this.userRepository.save(user);
+  async update(id: string, updateUserDto: UpdateUserDto & { profile?: any }): Promise<User> {
+    try {
+      console.log('UsersService.update: Starting user update', { userId: id, hasProfile: !!updateUserDto.profile });
+      
+      const user = await this.findOne(id);
+      
+      // Mettre à jour les champs de l'utilisateur (sans le profil)
+      const userData = { ...updateUserDto };
+      delete (userData as any).profile; // Retirer profile du userData
+      
+      // Ne pas mettre à jour le mot de passe s'il n'est pas fourni
+      if (!userData.password) {
+        delete userData.password;
+      } else {
+        // Hasher le nouveau mot de passe s'il est fourni
+        userData.password = await bcrypt.hash(userData.password, 10);
+      }
+      
+      Object.assign(user, userData);
+      await this.userRepository.save(user);
+      console.log('UsersService.update: User updated');
+      
+      // Mettre à jour le profil si fourni
+      if (updateUserDto.profile) {
+        const profileData = { ...updateUserDto.profile };
+        
+        console.log('UsersService.update: Profile data received', profileData);
+        
+        // Inclure tous les champs du profil, même null (pour permettre de vider un champ)
+        // Ne supprimer que les clés qui sont explicitement undefined
+        const cleanedProfileData: any = {};
+        Object.keys(profileData).forEach(key => {
+          // Inclure toutes les valeurs sauf undefined
+          if (profileData[key] !== undefined) {
+            cleanedProfileData[key] = profileData[key];
+          }
+        });
+        
+        console.log('UsersService.update: Cleaned profile data', cleanedProfileData);
+        
+        // Trouver ou créer le profil
+        let profile: UserProfile | null = await this.profileRepository.findOne({
+          where: { userId: id },
+        });
+        
+        if (profile) {
+          // Mettre à jour le profil existant - mettre à jour tous les champs fournis
+          Object.keys(cleanedProfileData).forEach(key => {
+            (profile as any)[key] = cleanedProfileData[key];
+          });
+          await this.profileRepository.save(profile);
+          console.log('UsersService.update: Profile updated', Object.keys(cleanedProfileData));
+        } else {
+          // Créer un nouveau profil
+          const profileToCreate = {
+            ...cleanedProfileData,
+            userId: id,
+          };
+          const createdProfile = this.profileRepository.create(profileToCreate) as unknown as UserProfile;
+          profile = await this.profileRepository.save(createdProfile);
+          console.log('UsersService.update: Profile created');
+        }
+      }
+      
+      // Recharger l'utilisateur avec le profil
+      const updatedUser = await this.userRepository.findOne({
+        where: { id },
+        relations: ['profile', 'perimeter'],
+      });
+      
+      if (!updatedUser) {
+        throw new NotFoundException('Utilisateur non trouvé après la mise à jour');
+      }
+      
+      return updatedUser;
+    } catch (error) {
+      console.error('UsersService.update: Error updating user', error);
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
+      throw error;
+    }
   }
 
   async remove(id: string): Promise<void> {
