@@ -29,8 +29,8 @@ export class UsersController {
   @Post()
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.CAFF)
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(@Body() body: CreateUserDto & { profile?: any }) {
+    return this.usersService.create(body);
   }
 
   @Get()
@@ -86,7 +86,7 @@ export class UsersController {
   @Roles(UserRole.ADMIN, UserRole.CAFF, UserRole.RH)
   async uploadPhoto(
     @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: any,
   ) {
     if (!file) {
       throw new BadRequestException('Photo file is required');

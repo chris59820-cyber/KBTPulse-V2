@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
+import { UserProfile } from './entities/user-profile.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -15,6 +17,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(UserProfile)
+    private profileRepository: Repository<UserProfile>,
     private configService: ConfigService,
   ) {
     this.storagePath =
@@ -32,9 +36,81 @@ export class UsersService {
     }
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.userRepository.create(createUserDto);
-    return this.userRepository.save(user);
+  async create(createUserDto: CreateUserDto & { profile?: any }): Promise<User> {
+    try {
+      console.log('UsersService.create: Starting user creation', { 
+        username: createUserDto.username, 
+        email: createUserDto.email,
+        hasProfile: !!createUserDto.profile 
+      });
+
+      // Vérifier si l'email ou le username existe déjà
+      const existingUser = await this.userRepository.findOne({
+        where: [
+          { email: createUserDto.email },
+          { username: createUserDto.username },
+        ],
+      });
+
+      if (existingUser) {
+        throw new BadRequestException('Un utilisateur avec cet email ou ce nom d\'utilisateur existe déjà');
+      }
+
+      // Hasher le mot de passe
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+      // Créer l'utilisateur
+      const userData = {
+        ...createUserDto,
+        password: hashedPassword,
+      };
+      delete (userData as any).profile; // Retirer profile du userData
+
+      const user = this.userRepository.create(userData);
+      const savedUser = await this.userRepository.save(user);
+      console.log('UsersService.create: User saved', { userId: savedUser.id });
+
+      // Créer le profil si fourni
+      if (createUserDto.profile) {
+        const profileData = {
+          ...createUserDto.profile,
+          userId: savedUser.id,
+        };
+        
+        // Nettoyer les valeurs vides
+        Object.keys(profileData).forEach(key => {
+          if (profileData[key] === '' || profileData[key] === null || profileData[key] === undefined) {
+            delete profileData[key];
+          }
+        });
+
+        console.log('UsersService.create: Creating profile', { profileData });
+        const profile = this.profileRepository.create(profileData);
+        await this.profileRepository.save(profile);
+        console.log('UsersService.create: Profile saved');
+        
+        // Recharger l'utilisateur avec le profil
+        const userWithProfile = await this.userRepository.findOne({
+          where: { id: savedUser.id },
+          relations: ['profile', 'perimeter'],
+        });
+        
+        if (!userWithProfile) {
+          throw new NotFoundException('Utilisateur créé mais non trouvé lors du rechargement');
+        }
+        
+        return userWithProfile;
+      }
+
+      return savedUser;
+    } catch (error) {
+      console.error('UsersService.create: Error creating user', error);
+      if (error instanceof Error) {
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+      }
+      throw error;
+    }
   }
 
   async findAll(): Promise<User[]> {
@@ -94,7 +170,7 @@ export class UsersService {
     await this.userRepository.remove(user);
   }
 
-  async uploadPhoto(userId: string, file: Express.Multer.File): Promise<{ photo: string }> {
+  async uploadPhoto(userId: string, file: any): Promise<{ photo: string }> {
     const user = await this.findOne(userId);
     
     // Supprimer l'ancienne photo si elle existe
