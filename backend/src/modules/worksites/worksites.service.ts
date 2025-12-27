@@ -4,15 +4,12 @@ import { Repository } from 'typeorm';
 import { Worksite } from './entities/worksite.entity';
 import { CreateWorksiteDto } from './dto/create-worksite.dto';
 import { UpdateWorksiteDto } from './dto/update-worksite.dto';
-import { Site } from '../sites/entities/site.entity';
 
 @Injectable()
 export class WorksitesService {
   constructor(
     @InjectRepository(Worksite)
     private worksiteRepository: Repository<Worksite>,
-    @InjectRepository(Site)
-    private siteRepository: Repository<Site>,
   ) {}
 
   async create(createWorksiteDto: CreateWorksiteDto): Promise<Worksite> {
@@ -22,7 +19,7 @@ export class WorksitesService {
 
   async findAll(): Promise<Worksite[]> {
     return this.worksiteRepository.find({
-      relations: ['rdc', 'site'],
+      relations: ['rdc', 'site', 'site.sectors'],
       order: { createdAt: 'DESC' },
     });
   }

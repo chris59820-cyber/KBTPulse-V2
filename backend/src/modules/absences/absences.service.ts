@@ -5,12 +5,15 @@ import { Absence } from './entities/absence.entity';
 import { CreateAbsenceDto } from './dto/create-absence.dto';
 import { UpdateAbsenceDto } from './dto/update-absence.dto';
 import { AbsenceStatus } from './entities/absence.entity';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationType } from '../notifications/entities/notification.entity';
 
 @Injectable()
 export class AbsencesService {
   constructor(
     @InjectRepository(Absence)
     private absenceRepository: Repository<Absence>,
+    private notificationsService: NotificationsService,
   ) {}
 
   async create(createAbsenceDto: CreateAbsenceDto): Promise<Absence> {
@@ -54,6 +57,22 @@ export class AbsencesService {
     absence.status = approved ? AbsenceStatus.APPROVED : AbsenceStatus.REJECTED;
     absence.validatedBy = validatorId;
     absence.validatedAt = new Date();
-    return this.absenceRepository.save(absence);
+    const savedAbsence = await this.absenceRepository.save(absence);
+
+    // Envoyer une notification à l'utilisateur
+    const message = approved
+      ? `Votre demande de RTT du ${new Date(absence.startDate).toLocaleDateString('fr-FR')} a été validée.`
+      : `Votre demande de RTT du ${new Date(absence.startDate).toLocaleDateString('fr-FR')} a été refusée.`;
+
+    await this.notificationsService.create(absence.userId, {
+      title: approved ? 'Demande de RTT validée' : 'Demande de RTT refusée',
+      message,
+      type: NotificationType.LEAVE_VALIDATION,
+      link: `/absences/${id}`,
+      metadata: JSON.stringify({ absenceId: id, approved }),
+    });
+
+    return savedAbsence;
   }
 }
+

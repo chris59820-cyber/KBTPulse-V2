@@ -56,3 +56,4 @@ export class Conversation extends BaseEntity {
   @Column({ default: false })
   archived: boolean;
 }
+

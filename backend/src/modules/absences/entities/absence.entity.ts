@@ -9,9 +9,10 @@ export enum AbsenceType {
   RC = 'RC', // Repos compensateur
   RL = 'RL', // Repos légal
   EF = 'EF', // Événement familial
-  SICK = 'Maladie', // Arrêt maladie
+  SICK = 'Maladie', // Arrêt maladie (avec justificatif)
   AT = 'AT', // Accident du travail
   TRAINING = 'Formation', // Formation professionnelle
+  MEDICAL_VISIT = 'Visite médicale', // Visite médicale
   UNJUSTIFIED = 'Absence injustifiée',
 }
 
@@ -66,3 +67,4 @@ export class Absence extends BaseEntity {
   @Column({ type: 'datetime', nullable: true })
   validatedAt?: Date;
 }
+

@@ -22,3 +22,4 @@ export class CreateNotificationDto {
   @IsOptional()
   metadata?: string;
 }
+

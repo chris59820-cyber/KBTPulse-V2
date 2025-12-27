@@ -20,6 +20,7 @@ import { MessagingModule } from './modules/messaging/messaging.module';
 import { PlanningModule } from './modules/planning/planning.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { NewsModule } from './modules/news/news.module';
+import { BusinessCodesModule } from './modules/business-codes/business-codes.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { NewsModule } from './modules/news/news.module';
     PlanningModule,
     DashboardModule,
     NewsModule,
+    BusinessCodesModule,
   ],
 })
 export class AppModule {}

@@ -33,6 +33,7 @@ export class PerimetersController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard) // Seulement authentification requise, pas de restriction de rôle
   findOne(@Param('id') id: string) {
     return this.perimetersService.findOne(id);
   }
@@ -47,3 +48,4 @@ export class PerimetersController {
     return this.perimetersService.remove(id);
   }
 }
+

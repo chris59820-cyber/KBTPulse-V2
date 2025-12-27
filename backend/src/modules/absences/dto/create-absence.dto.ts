@@ -36,3 +36,4 @@ export class CreateAbsenceDto {
   @IsOptional()
   justification?: string;
 }
+

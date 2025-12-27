@@ -48,3 +48,4 @@ export class News extends BaseEntity {
   publishedAt?: Date;
 }
 
+

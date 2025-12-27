@@ -3,3 +3,4 @@ import { CreateSecurityAlertDto } from './create-security-alert.dto';
 
 export class UpdateSecurityAlertDto extends PartialType(CreateSecurityAlertDto) {}
 
+

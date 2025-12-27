@@ -40,3 +40,4 @@ export class Message extends BaseEntity {
   @Column({ type: 'datetime', nullable: true })
   readAt?: Date;
 }
+

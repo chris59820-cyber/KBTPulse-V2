@@ -29,3 +29,4 @@ export class CreateConversationDto {
   @IsNotEmpty()
   participantIds: string[];
 }
+

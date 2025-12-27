@@ -108,3 +108,4 @@ export class InterventionsController {
     return this.interventionsService.assignUsers(id, userIds);
   }
 }
+

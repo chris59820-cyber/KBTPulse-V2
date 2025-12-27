@@ -62,3 +62,4 @@ export class Document extends BaseEntity {
   @JoinColumn({ name: 'uploadedBy' })
   uploader: User;
 }
+

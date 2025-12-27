@@ -62,3 +62,4 @@ Le dossier `storage/` est créé automatiquement avec les sous-dossiers :
 - `storage/signatures/` : Signatures électroniques
 
 Ces dossiers sont ignorés par Git mais créés automatiquement par l'application.
+

@@ -86,3 +86,4 @@ export class VehiclesController {
     return this.vehiclesService.assignToIntervention(id, interventionId);
   }
 }
+

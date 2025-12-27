@@ -57,3 +57,4 @@ export class CreateVehicleDto {
   @IsOptional()
   notes?: string;
 }
+

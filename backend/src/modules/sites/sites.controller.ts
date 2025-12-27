@@ -79,4 +79,10 @@ export class SitesController {
   createEquipment(@Param('floorId') floorId: string, @Body('name') name: string) {
     return this.sitesService.createEquipment(floorId, name);
   }
+
+  @Get(':siteId/structure')
+  getSiteStructure(@Param('siteId') siteId: string) {
+    return this.sitesService.getSiteStructure(siteId);
+  }
 }
+

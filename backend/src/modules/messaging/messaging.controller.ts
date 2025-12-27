@@ -73,3 +73,4 @@ export class MessagingController {
     return this.messagingService.getUnreadCount(req.user.userId);
   }
 }
+

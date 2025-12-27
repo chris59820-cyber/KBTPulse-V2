@@ -18,3 +18,4 @@ export class SiteUnit extends BaseEntity {
   @OneToMany(() => SiteBuilding, (building) => building.unit, { cascade: true })
   buildings?: SiteBuilding[];
 }
+

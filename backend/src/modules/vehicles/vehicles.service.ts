@@ -88,3 +88,4 @@ export class VehiclesService {
     return this.vehicleRepository.save(vehicle);
   }
 }
+

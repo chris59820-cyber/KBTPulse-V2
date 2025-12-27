@@ -25,3 +25,4 @@ export class ProfilesController {
     return this.profilesService.update(req.user.userId, updateProfileDto);
   }
 }
+

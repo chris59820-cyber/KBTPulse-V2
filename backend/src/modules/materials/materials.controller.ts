@@ -83,3 +83,4 @@ export class MaterialsController {
     return this.materialsService.assignToIntervention(id, interventionId);
   }
 }
+

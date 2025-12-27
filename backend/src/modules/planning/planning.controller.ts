@@ -54,3 +54,4 @@ export class PlanningController {
     return this.planningService.getAvailableUsers(new Date(date), perimeterId);
   }
 }
+

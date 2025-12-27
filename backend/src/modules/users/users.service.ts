@@ -116,6 +116,7 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     return this.userRepository.find({
       relations: ['profile', 'perimeter'],
+      order: { lastName: 'ASC', firstName: 'ASC' },
     });
   }
 

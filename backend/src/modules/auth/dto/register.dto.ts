@@ -25,3 +25,4 @@ export class RegisterDto {
   @IsOptional()
   role?: string;
 }
+

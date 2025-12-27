@@ -28,3 +28,4 @@ export class DashboardController {
     return this.dashboardService.getDashboardStats(perimeterId);
   }
 }
+

@@ -101,4 +101,47 @@ export class SitesService {
     const equipment = this.equipmentRepository.create({ floorId, name });
     return this.equipmentRepository.save(equipment);
   }
+
+  async getSiteStructure(siteId: string): Promise<any> {
+    const site = await this.findOne(siteId);
+    if (!site) {
+      throw new NotFoundException(`Site with ID ${siteId} not found`);
+    }
+
+    // Transformer la structure en arbre
+    const buildTree = (sectors: any[]): any[] => {
+      return sectors.map((sector) => ({
+        id: sector.id,
+        name: sector.name,
+        type: 'sector',
+        children: sector.units ? sector.units.map((unit: any) => ({
+          id: unit.id,
+          name: unit.name,
+          type: 'unit',
+          parentId: sector.id,
+          children: unit.buildings ? unit.buildings.map((building: any) => ({
+            id: building.id,
+            name: building.name,
+            type: 'building',
+            parentId: unit.id,
+            children: building.floors ? building.floors.map((floor: any) => ({
+              id: floor.id,
+              name: floor.name,
+              type: 'floor',
+              parentId: building.id,
+              children: floor.equipments ? floor.equipments.map((equipment: any) => ({
+                id: equipment.id,
+                name: equipment.name,
+                type: 'equipment',
+                parentId: floor.id,
+                children: [],
+              })) : [],
+            })) : [],
+          })) : [],
+        })) : [],
+      }));
+    };
+
+    return buildTree(site.sectors || []);
+  }
 }

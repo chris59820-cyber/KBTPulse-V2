@@ -58,10 +58,15 @@ export class InterventionsService {
       relations: [
         'site',
         'rdc',
+        'rdc.profile',
         'ce',
+        'ce.profile',
         'responsible',
+        'responsible.profile',
         'worksite',
         'assignedUsers',
+        'assignedUsers.profile',
+        'assignedUsers.perimeter',
       ],
       order: { createdAt: 'DESC' },
     });
@@ -73,10 +78,15 @@ export class InterventionsService {
       relations: [
         'site',
         'rdc',
+        'rdc.profile',
         'ce',
+        'ce.profile',
         'responsible',
+        'responsible.profile',
         'worksite',
         'assignedUsers',
+        'assignedUsers.profile',
+        'assignedUsers.perimeter',
       ],
     });
     if (!intervention) {

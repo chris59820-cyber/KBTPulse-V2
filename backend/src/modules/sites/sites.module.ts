@@ -25,3 +25,4 @@ import { SiteEquipment } from './entities/site-equipment.entity';
   exports: [SitesService],
 })
 export class SitesModule {}
+

@@ -228,3 +228,4 @@
 - Délégation de permissions temporaires
 - Groupes d'utilisateurs avec permissions partagées
 
+

@@ -14,3 +14,4 @@ export class SiteEquipment extends BaseEntity {
   @Column()
   name: string;
 }
+

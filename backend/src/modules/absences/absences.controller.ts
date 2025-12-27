@@ -35,7 +35,7 @@ export class AbsencesController {
   findAll(@Query('userId') userId?: string, @Request() req?) {
     // Les utilisateurs ne voient que leurs propres absences sauf si ils ont les droits
     const targetUserId =
-      userId && (req.user.role === UserRole.RDC || req.user.role === UserRole.CAFF || req.user.role === UserRole.RH)
+      userId && (req.user.role === UserRole.RDC || req.user.role === UserRole.CAFF || req.user.role === UserRole.RH || req.user.role === UserRole.ADMIN)
         ? userId
         : req.user.userId;
     return this.absencesService.findAll(targetUserId);
@@ -58,7 +58,7 @@ export class AbsencesController {
 
   @Post(':id/validate')
   @UseGuards(RolesGuard)
-  @Roles(UserRole.RDC, UserRole.CAFF, UserRole.RH)
+  @Roles(UserRole.RDC, UserRole.CAFF, UserRole.RH, UserRole.ADMIN)
   validate(
     @Param('id') id: string,
     @Body('approved') approved: boolean,
@@ -67,3 +67,4 @@ export class AbsencesController {
     return this.absencesService.validate(id, req.user.userId, approved);
   }
 }
+

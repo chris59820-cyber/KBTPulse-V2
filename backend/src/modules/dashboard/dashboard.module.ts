@@ -25,3 +25,4 @@ import { Document } from '../documents/entities/document.entity';
   exports: [DashboardService],
 })
 export class DashboardModule {}
+

@@ -35,3 +35,4 @@ export class SecurityAlert extends BaseEntity {
   expiresAt?: Date;
 }
 
+

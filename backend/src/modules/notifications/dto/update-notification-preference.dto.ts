@@ -22,3 +22,4 @@ export class UpdateNotificationPreferenceDto {
   @IsOptional()
   soundEnabled?: boolean;
 }
+

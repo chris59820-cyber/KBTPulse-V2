@@ -84,8 +84,9 @@ export class TimesheetsController {
 
   @Post(':id/validate')
   @UseGuards(RolesGuard)
-  @Roles(UserRole.RDC, UserRole.CAFF)
+  @Roles(UserRole.RDC, UserRole.CAFF, UserRole.ADMIN)
   validate(@Param('id') id: string, @Request() req) {
     return this.timesheetsService.validate(id, req.user.userId);
   }
 }
+

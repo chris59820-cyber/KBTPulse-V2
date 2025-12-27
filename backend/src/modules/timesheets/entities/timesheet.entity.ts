@@ -56,3 +56,4 @@ export class Timesheet extends BaseEntity {
   @Column({ type: 'datetime', nullable: true })
   validatedAt?: Date;
 }
+

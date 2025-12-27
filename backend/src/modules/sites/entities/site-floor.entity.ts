@@ -18,3 +18,4 @@ export class SiteFloor extends BaseEntity {
   @OneToMany(() => SiteEquipment, (equipment) => equipment.floor, { cascade: true })
   equipments?: SiteEquipment[];
 }
+

@@ -53,3 +53,4 @@ export class CreateMaterialDto {
   @IsOptional()
   nextMaintenanceDate?: Date;
 }
+

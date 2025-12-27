@@ -33,3 +33,4 @@ export class StaffController {
     return this.staffService.getOrganigramme(perimeterId);
   }
 }
+

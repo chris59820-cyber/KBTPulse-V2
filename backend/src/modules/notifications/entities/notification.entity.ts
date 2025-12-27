@@ -46,3 +46,4 @@ export class Notification extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   metadata?: string; // JSON pour données supplémentaires
 }
+

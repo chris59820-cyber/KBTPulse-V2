@@ -13,3 +13,4 @@ export class CreateMessageDto {
   @IsOptional()
   location?: string;
 }
+

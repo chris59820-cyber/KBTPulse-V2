@@ -38,3 +38,4 @@ export class NotificationPreference extends BaseEntity {
   @Column({ default: false })
   soundEnabled: boolean;
 }
+

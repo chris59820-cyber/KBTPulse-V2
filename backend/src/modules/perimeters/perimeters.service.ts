@@ -48,3 +48,4 @@ export class PerimetersService {
     await this.perimeterRepository.remove(perimeter);
   }
 }
+

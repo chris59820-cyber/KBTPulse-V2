@@ -65,3 +65,4 @@ export class Material extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   maintenanceHistory?: string; // JSON array
 }
+

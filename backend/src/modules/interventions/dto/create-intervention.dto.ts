@@ -107,3 +107,4 @@ export class CreateInterventionDto {
   @IsOptional()
   assignedUserIds?: string[];
 }
+

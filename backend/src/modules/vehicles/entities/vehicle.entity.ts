@@ -61,3 +61,4 @@ export class Vehicle extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   notes?: string;
 }
+
