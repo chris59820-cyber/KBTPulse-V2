@@ -9,6 +9,7 @@ import { Site } from '../sites/entities/site.entity';
 import { Worksite } from '../worksites/entities/worksite.entity';
 import { DocumentsModule } from '../documents/documents.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
     ]),
     DocumentsModule,
     NotificationsModule,
+    UsersModule,
   ],
   controllers: [InterventionsController],
   providers: [InterventionsService],

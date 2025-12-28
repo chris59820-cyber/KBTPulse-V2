@@ -8,6 +8,7 @@ import { Intervention } from '../interventions/entities/intervention.entity';
 import { Material } from '../materials/entities/material.entity';
 import { Vehicle } from '../vehicles/entities/vehicle.entity';
 import { Document } from '../documents/entities/document.entity';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -19,10 +20,12 @@ import { Document } from '../documents/entities/document.entity';
       Vehicle,
       Document,
     ]),
+    UsersModule,
   ],
   controllers: [DashboardController],
   providers: [DashboardService],
   exports: [DashboardService],
 })
 export class DashboardModule {}
+
 

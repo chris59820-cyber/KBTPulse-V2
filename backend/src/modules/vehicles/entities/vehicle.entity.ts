@@ -62,3 +62,4 @@ export class Vehicle extends BaseEntity {
   notes?: string;
 }
 
+

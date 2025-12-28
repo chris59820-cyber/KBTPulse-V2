@@ -41,3 +41,4 @@ export class Message extends BaseEntity {
   readAt?: Date;
 }
 
+

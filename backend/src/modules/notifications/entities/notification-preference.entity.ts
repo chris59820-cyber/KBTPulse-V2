@@ -39,3 +39,4 @@ export class NotificationPreference extends BaseEntity {
   soundEnabled: boolean;
 }
 
+

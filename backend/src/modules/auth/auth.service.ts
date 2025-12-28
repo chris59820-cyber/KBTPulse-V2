@@ -67,6 +67,7 @@ export class AuthService {
         lastName: user.lastName,
         role: user.role,
         perimeterId: user.perimeterId,
+        favoritePerimeterId: user.favoritePerimeterId,
       },
     };
   }

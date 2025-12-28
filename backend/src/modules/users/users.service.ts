@@ -92,7 +92,7 @@ export class UsersService {
         // Recharger l'utilisateur avec le profil
         const userWithProfile = await this.userRepository.findOne({
           where: { id: savedUser.id },
-          relations: ['profile', 'perimeter'],
+          relations: ['profile', 'perimeter', 'favoritePerimeter'],
         });
         
         if (!userWithProfile) {
@@ -115,7 +115,7 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find({
-      relations: ['profile', 'perimeter'],
+      relations: ['profile', 'perimeter', 'favoritePerimeter'],
       order: { lastName: 'ASC', firstName: 'ASC' },
     });
   }
@@ -123,7 +123,7 @@ export class UsersService {
   async findOne(id: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['profile', 'perimeter'],
+      relations: ['profile', 'perimeter', 'favoritePerimeter'],
     });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -135,7 +135,7 @@ export class UsersService {
     try {
       const user = await this.userRepository.findOne({
         where: { username },
-        relations: ['profile', 'perimeter'],
+        relations: ['profile', 'perimeter', 'favoritePerimeter'],
       });
       return user;
     } catch (error) {
@@ -156,7 +156,7 @@ export class UsersService {
   async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: { email },
-      relations: ['profile', 'perimeter'],
+      relations: ['profile', 'perimeter', 'favoritePerimeter'],
     });
   }
 
@@ -227,7 +227,7 @@ export class UsersService {
       // Recharger l'utilisateur avec le profil
       const updatedUser = await this.userRepository.findOne({
         where: { id },
-        relations: ['profile', 'perimeter'],
+        relations: ['profile', 'perimeter', 'favoritePerimeter'],
       });
       
       if (!updatedUser) {
@@ -288,5 +288,16 @@ export class UsersService {
     await this.userRepository.save(user);
 
     return { photo: relativePath };
+  }
+
+  async setFavoritePerimeter(userId: string, perimeterId: string | null): Promise<User> {
+    const user = await this.findOne(userId);
+    user.favoritePerimeterId = perimeterId || undefined;
+    return this.userRepository.save(user);
+  }
+
+  async getFavoritePerimeter(userId: string): Promise<string | null> {
+    const user = await this.findOne(userId);
+    return user.favoritePerimeterId || null;
   }
 }

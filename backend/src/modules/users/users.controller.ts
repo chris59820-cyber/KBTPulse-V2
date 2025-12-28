@@ -106,4 +106,18 @@ export class UsersController {
 
     return this.usersService.uploadPhoto(id, file);
   }
+
+  @Patch('me/favorite-perimeter')
+  async setFavoritePerimeter(
+    @Request() req,
+    @Body() body: { perimeterId: string | null },
+  ) {
+    return this.usersService.setFavoritePerimeter(req.user.userId, body.perimeterId);
+  }
+
+  @Get('me/favorite-perimeter')
+  async getFavoritePerimeter(@Request() req) {
+    const perimeterId = await this.usersService.getFavoritePerimeter(req.user.userId);
+    return { perimeterId };
+  }
 }

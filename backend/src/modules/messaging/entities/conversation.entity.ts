@@ -57,3 +57,4 @@ export class Conversation extends BaseEntity {
   archived: boolean;
 }
 
+

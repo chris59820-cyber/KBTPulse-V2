@@ -19,3 +19,4 @@ export class SiteSector extends BaseEntity {
   units?: SiteUnit[];
 }
 
+

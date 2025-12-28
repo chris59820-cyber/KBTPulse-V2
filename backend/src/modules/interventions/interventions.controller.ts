@@ -17,11 +17,16 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
 import { InterventionStatus } from './entities/intervention.entity';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { UsersService } from '../users/users.service';
 
 @Controller('interventions')
 @UseGuards(JwtAuthGuard)
 export class InterventionsController {
-  constructor(private readonly interventionsService: InterventionsService) {}
+  constructor(
+    private readonly interventionsService: InterventionsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post()
   @UseGuards(RolesGuard)
@@ -37,13 +42,32 @@ export class InterventionsController {
   }
 
   @Get()
-  findAll(
+  async findAll(
     @Query('status') status?: InterventionStatus,
     @Query('rdcId') rdcId?: string,
     @Query('ceId') ceId?: string,
     @Query('worksiteId') worksiteId?: string,
+    @Query('perimeterId') perimeterId?: string,
+    @CurrentUser() currentUser?: any,
   ) {
-    return this.interventionsService.findAll({ status, rdcId, ceId, worksiteId });
+    // Récupérer l'utilisateur complet pour obtenir le périmètre favori
+    let effectivePerimeterId = perimeterId;
+    if (!effectivePerimeterId && currentUser?.userId) {
+      try {
+        const user = await this.usersService.findOne(currentUser.userId);
+        effectivePerimeterId = user.favoritePerimeterId || undefined;
+      } catch (error) {
+        // Ignorer l'erreur et continuer sans filtre
+      }
+    }
+    
+    return this.interventionsService.findAll({ 
+      status, 
+      rdcId, 
+      ceId, 
+      worksiteId,
+      perimeterId: effectivePerimeterId,
+    });
   }
 
   @Get(':id')
@@ -108,4 +132,5 @@ export class InterventionsController {
     return this.interventionsService.assignUsers(id, userIds);
   }
 }
+
 

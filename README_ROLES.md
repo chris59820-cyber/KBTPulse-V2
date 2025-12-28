@@ -202,3 +202,4 @@ Voir le fichier `docs/ROLES_AND_PERMISSIONS.md` pour la matrice complète des pe
 - Filtrage des données par périmètre (sauf ADMIN et CAFF)
 
 
+

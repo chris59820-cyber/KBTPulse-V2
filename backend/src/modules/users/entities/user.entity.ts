@@ -47,6 +47,13 @@ export class User extends BaseEntity {
   @JoinColumn({ name: 'perimeterId' })
   perimeter?: Perimeter;
 
+  @Column({ nullable: true })
+  favoritePerimeterId?: string;
+
+  @ManyToOne(() => Perimeter, { nullable: true })
+  @JoinColumn({ name: 'favoritePerimeterId' })
+  favoritePerimeter?: Perimeter;
+
   @OneToOne(() => UserProfile, (profile) => profile.user, {
     cascade: true,
     nullable: true,

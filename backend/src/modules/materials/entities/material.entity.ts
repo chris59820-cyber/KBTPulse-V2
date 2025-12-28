@@ -66,3 +66,4 @@ export class Material extends BaseEntity {
   maintenanceHistory?: string; // JSON array
 }
 
+

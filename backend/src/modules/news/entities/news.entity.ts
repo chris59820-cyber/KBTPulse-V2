@@ -20,7 +20,13 @@ export class News extends BaseEntity {
   content: string;
 
   @Column({ type: 'text', nullable: true })
-  image?: string;
+  image?: string; // Image principale (pour compatibilité)
+
+  @Column({ type: 'text', nullable: true })
+  images?: string; // JSON array d'images pour le carrousel
+
+  @Column({ type: 'text', nullable: true })
+  documents?: string; // JSON array de PDFs
 
   @Column({
     type: 'text',
@@ -47,5 +53,6 @@ export class News extends BaseEntity {
   @Column({ type: 'datetime', nullable: true })
   publishedAt?: Date;
 }
+
 
 

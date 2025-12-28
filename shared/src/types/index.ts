@@ -7,6 +7,8 @@ export interface User {
   lastName: string;
   role: UserRole;
   profile?: UserProfile;
+  perimeterId?: string;
+  favoritePerimeterId?: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

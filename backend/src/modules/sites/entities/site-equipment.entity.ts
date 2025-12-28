@@ -15,3 +15,4 @@ export class SiteEquipment extends BaseEntity {
   name: string;
 }
 
+

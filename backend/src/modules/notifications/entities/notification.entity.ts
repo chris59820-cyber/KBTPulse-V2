@@ -47,3 +47,4 @@ export class Notification extends BaseEntity {
   metadata?: string; // JSON pour données supplémentaires
 }
 
+

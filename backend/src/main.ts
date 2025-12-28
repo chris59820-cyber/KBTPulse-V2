@@ -8,11 +8,6 @@ import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   
-  // Servir les fichiers statiques depuis le dossier storage
-  app.useStaticAssets(join(__dirname, '..', 'storage'), {
-    prefix: '/storage/',
-  });
-
   // Exception filter global
   app.useGlobalFilters(new AllExceptionsFilter());
 
@@ -27,6 +22,12 @@ async function bootstrap() {
 
   // Préfixe API
   app.setGlobalPrefix('api');
+
+  // Servir les fichiers statiques depuis le dossier storage
+  // useStaticAssets ne respecte pas le préfixe global, donc on doit inclure /api dans le préfixe
+  app.useStaticAssets(join(__dirname, '..', 'storage'), {
+    prefix: '/api/storage/',
+  });
 
   // CORS
   app.enableCors({

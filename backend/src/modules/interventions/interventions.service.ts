@@ -46,6 +46,7 @@ export class InterventionsService {
     rdcId?: string;
     ceId?: string;
     worksiteId?: string;
+    perimeterId?: string;
   }): Promise<Intervention[]> {
     const where: any = {};
     if (filters?.status) where.status = filters.status;
@@ -53,23 +54,43 @@ export class InterventionsService {
     if (filters?.ceId) where.ceId = filters.ceId;
     if (filters?.worksiteId) where.worksiteId = filters.worksiteId;
 
-    return this.interventionRepository.find({
-      where,
-      relations: [
-        'site',
-        'rdc',
-        'rdc.profile',
-        'ce',
-        'ce.profile',
-        'responsible',
-        'responsible.profile',
-        'worksite',
-        'assignedUsers',
-        'assignedUsers.profile',
-        'assignedUsers.perimeter',
-      ],
-      order: { createdAt: 'DESC' },
-    });
+    let query = this.interventionRepository
+      .createQueryBuilder('intervention')
+      .leftJoinAndSelect('intervention.site', 'site')
+      .leftJoinAndSelect('intervention.rdc', 'rdc')
+      .leftJoinAndSelect('rdc.profile', 'rdcProfile')
+      .leftJoinAndSelect('intervention.ce', 'ce')
+      .leftJoinAndSelect('ce.profile', 'ceProfile')
+      .leftJoinAndSelect('intervention.responsible', 'responsible')
+      .leftJoinAndSelect('responsible.profile', 'responsibleProfile')
+      .leftJoinAndSelect('intervention.worksite', 'worksite')
+      .leftJoinAndSelect('intervention.assignedUsers', 'assignedUsers')
+      .leftJoinAndSelect('assignedUsers.profile', 'assignedUsersProfile')
+      .leftJoinAndSelect('assignedUsers.perimeter', 'assignedUsersPerimeter');
+
+    // Appliquer les filtres de base
+    if (filters?.status) {
+      query = query.andWhere('intervention.status = :status', { status: filters.status });
+    }
+    if (filters?.rdcId) {
+      query = query.andWhere('intervention.rdcId = :rdcId', { rdcId: filters.rdcId });
+    }
+    if (filters?.ceId) {
+      query = query.andWhere('intervention.ceId = :ceId', { ceId: filters.ceId });
+    }
+    if (filters?.worksiteId) {
+      query = query.andWhere('intervention.worksiteId = :worksiteId', { worksiteId: filters.worksiteId });
+    }
+
+    // Filtrer par périmètre si spécifié
+    if (filters?.perimeterId) {
+      query = query.andWhere(
+        '(rdc.perimeterId = :perimeterId OR ce.perimeterId = :perimeterId OR responsible.perimeterId = :perimeterId OR assignedUsers.perimeterId = :perimeterId)',
+        { perimeterId: filters.perimeterId }
+      );
+    }
+
+    return query.orderBy('intervention.createdAt', 'DESC').getMany();
   }
 
   async findOne(id: string): Promise<Intervention> {

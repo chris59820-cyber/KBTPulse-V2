@@ -32,3 +32,4 @@ export class InterventionAssignment extends BaseEntity {
   role: AssignmentRole;
 }
 
+

@@ -14,6 +14,14 @@ export class CreateNewsDto {
   @IsOptional()
   image?: string;
 
+  @IsString()
+  @IsOptional()
+  images?: string; // JSON array d'images
+
+  @IsString()
+  @IsOptional()
+  documents?: string; // JSON array de PDFs
+
   @IsEnum(NewsCategory)
   @IsNotEmpty()
   category: NewsCategory;
@@ -29,5 +37,6 @@ export class CreateNewsDto {
   @IsOptional()
   publishedAt?: Date;
 }
+
 
 
